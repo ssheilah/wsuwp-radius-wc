@@ -27,5 +27,22 @@ class WSUWP_Radius_WC {
 	 *
 	 * @since 0.0.1
 	 */
-	public function setup_hooks() {}
+	public function setup_hooks() {
+		add_shortcode( 'radius-wc', 'radius_wc_shortcode' );
+		add_action( 'wp_enqueue_scripts', array( $this, 'wsuf_radius_wc_enqueue_scripts' ), 99 );
+		// [radius-wc]
+		function radius_wc_shortcode( $atts ) {
+			$a = shortcode_atts( array(
+				'url' => 'https://wsu.edu',
+			), $atts );
+			return "<link rel='import' href='{$a['url']}' onload='onImportReady()'>";
+		}
+	}
+
+	/* Enqueues JavaScript and CSS files */
+
+	function wsuf_radius_wc_enqueue_scripts() {
+		wp_enqueue_script( 'detect', plugins_url( '../js/detect.js', __FILE__ ), true );
+		wp_enqueue_script( 'wsuf_launcher', plugins_url( '../js/launcher.js', __FILE__ ), true );
+	}
 }
